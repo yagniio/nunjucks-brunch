@@ -4,17 +4,19 @@ path = require 'path'
 mkdirp = require 'mkdirp'
 _ = require 'lodash'
 
+dataUriFilter = require './data_uri_filter'
+
 module.exports = class nunjucksBrunchPlugin
   brunchPlugin: yes
   type: 'template'
-  extension: 'html'
+  extension: 'json'
   nunjucksOptions: {}
 
   publicPath: 'public'
   templatePath: 'app/views'
   projectPath: path.resolve process.cwd()
 
-  filePatterns: /^app(\/|\\)views(\/|\\).*.html$/
+  filePatterns: /^app(\/|\\)views(\/|\\).*.json$/
 
   constructor: ( @config ) ->
     @configure()
@@ -39,6 +41,7 @@ module.exports = class nunjucksBrunchPlugin
   templateFactory: ( templatePath, options, callback ) ->
     try
       env = new nunjucks.Environment( new nunjucks.FileSystemLoader ( path.dirname templatePath ) )
+      env.addFilter('dataUri', dataUriFilter.bind({ templatePath: templatePath}))
       template = env.render options.filename, options
     catch e
       error = e
