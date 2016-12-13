@@ -9,7 +9,7 @@ dataUriFilter = require './data_uri_filter'
 module.exports = class nunjucksBrunchPlugin
   brunchPlugin: yes
   type: 'template'
-  extension: 'json'
+  pattern: /json|html/
   nunjucksOptions: {}
 
   publicPath: 'public'
